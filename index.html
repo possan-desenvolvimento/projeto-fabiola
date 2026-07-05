@@ -1,0 +1,391 @@
+<!-- CONTADOR OFICIAL DA FOTTO -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Auto Credenciamento - Reconhece Tudo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0b2b26, #163832);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+        .card-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #1a4d44;
+        }
+        .badge {
+            background: #1a4d44;
+            color: white;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+        .campos-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .campo-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+        .campo-item label {
+            width: 80px;
+            font-weight: 600;
+            color: #2d6a5e;
+            font-size: 14px;
+        }
+        .campo-item input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 2px solid #cbd5e0;
+            border-radius: 16px;
+            font-size: 14px;
+            background: #fef9e8;
+            font-family: monospace;
+        }
+        .campo-item input:focus {
+            outline: none;
+            border-color: #2d6a5e;
+            background: white;
+        }
+        .btn-copiar {
+            background: #2d6a5e;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 80px;
+            transition: 0.1s;
+        }
+        .btn-copiar.copiado {
+            background: #27ae60;
+        }
+        .btn-copiar:hover {
+            background: #1e5a4f;
+        }
+        .contador-area {
+            background: #e6f4f0;
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .contador-area label {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: #1a3b35;
+        }
+        textarea {
+            width: 100%;
+            padding: 14px;
+            font-size: 14px;
+            border: 2px solid #cbd5e0;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            background: #fef9e8;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #2d6a5e;
+            background: white;
+        }
+        .resultado-instantaneo {
+            background: white;
+            border-radius: 24px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .numero-grande {
+            font-size: 64px;
+            font-weight: 800;
+            color: #1e6f5c;
+            line-height: 1;
+        }
+        .info-contagem {
+            background: #edf2f7;
+            padding: 10px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-family: monospace;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .dica {
+            background: #fef4e8;
+            padding: 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            margin-top: 16px;
+            border-left: 4px solid #f4a261;
+        }
+        hr {
+            margin: 16px 0;
+        }
+        @media (max-width: 550px) {
+            .campo-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .campo-item label {
+                width: auto;
+                margin-bottom: 5px;
+            }
+            .btn-copiar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- CARD 1: DADOS PARA COPIAR -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📋 Meus Dados</h2>
+            <span class="badge">clica no botão para copiar</span>
+        </div>
+        <div class="campos-grid">
+            <div class="campo-item">
+                <label>👤 Nome:</label>
+                <input type="text" id="campoNome" value="Fabiola Souza">
+                <button class="btn-copiar" data-campo="nome">📋 Copiar</button>
+            </div>
+            <div class="campo-item">
+                <label>📧 E-mail:</label>
+                <input type="text" id="campoEmail" value="fabiola.souza.jesus@gmail.com">
+                <button class="btn-copiar" data-campo="email">📋 Copiar</button>
+            </div>
+            <div class="campo-item">
+                <label>📞 Telefone:</label>
+                <input type="text" id="campoTelefone" value="11971882420">
+                <button class="btn-copiar" data-campo="telefone">📋 Copiar</button>
+            </div>
+            <div class="campo-item">
+                <label>📷 Instagram:</label>
+                <input type="text" id="campoInstagram" value="fabiola_souza.gomes">
+                <button class="btn-copiar" data-campo="instagram">📋 Copiar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 2: CONTADOR INTELIGENTE -->
+    <div class="card">
+        <div class="card-header">
+            <h2>🔢 Contador Inteligente</h2>
+            <span class="badge">reconhece "considerando" e "desconsiderando"</span>
+        </div>
+        
+        <div class="contador-area">
+            <label>📌 Cole a pergunta completa aqui:</label>
+            <textarea id="campoPergunta" rows="4" placeholder='Ex: Considerando os espaços e considerando a vírgula, quantos caracteres existem na frase: "Siga firme, confie em você e vá além hoje"? *'></textarea>
+            
+            <div class="resultado-instantaneo">
+                <div style="font-size: 13px; opacity: 0.7;">✅ RESPOSTA</div>
+                <div class="numero-grande" id="respostaNumero">—</div>
+                <div id="regraAuto" style="font-size: 11px; background: #e6f4f0; display: inline-block; padding: 4px 12px; border-radius: 40px; margin-top: 6px;"></div>
+                <div class="info-contagem" id="infoContagem"></div>
+            </div>
+        </div>
+
+        <div class="dica">
+            ⚡ <strong>Agora reconhece QUALQUER variação:</strong><br>
+            • "desconsiderando os espaços" → <strong>remove</strong> espaços<br>
+            • "considerando os espaços" → <strong>mantém</strong> espaços<br>
+            • "desconsiderando vírgulas" → <strong>remove</strong> vírgulas<br>
+            • "considerando vírgulas" → <strong>mantém</strong> vírgulas<br>
+            🔥 <strong>Funciona para tudo!</strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== COPIAR ====================
+    function copiarTexto(texto, botao) {
+        navigator.clipboard.writeText(texto).then(() => {
+            let textoOriginal = botao.innerText;
+            botao.innerText = "✅ Copiado!";
+            botao.classList.add("copiado");
+            setTimeout(() => {
+                botao.innerText = textoOriginal;
+                botao.classList.remove("copiado");
+            }, 1500);
+        }).catch(() => {
+            alert("Não foi possível copiar. Selecione o texto manualmente.");
+        });
+    }
+
+    document.querySelectorAll('.btn-copiar').forEach(botao => {
+        botao.addEventListener('click', function() {
+            let campo = this.getAttribute('data-campo');
+            let input = null;
+            if (campo === 'nome') input = document.getElementById('campoNome');
+            else if (campo === 'email') input = document.getElementById('campoEmail');
+            else if (campo === 'telefone') input = document.getElementById('campoTelefone');
+            else if (campo === 'instagram') input = document.getElementById('campoInstagram');
+            
+            if (input) {
+                copiarTexto(input.value, this);
+            }
+        });
+    });
+
+    // ==================== CONTADOR ATUALIZADO ====================
+    function extrairFrase(texto) {
+        let match = texto.match(/"([^"]+)"/);
+        if (match) {
+            return match[1].replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+        return "";
+    }
+
+    function processarPergunta(perguntaCompleta) {
+        let frase = extrairFrase(perguntaCompleta);
+        if (!frase) {
+            return { erro: "Não encontrei a frase entre aspas." };
+        }
+
+        let textoLower = perguntaCompleta.toLowerCase();
+        
+        // ===== REGRA DOS ESPAÇOS =====
+        // Se tem "considerando os espaços" -> MANTÉM espaços
+        // Se tem "desconsiderando os espaços" -> REMOVE espaços
+        // Padrão: remove espaços (mais comum)
+        let removerEspacos = true;
+        
+        if (textoLower.includes("considerando os espaços") || 
+            textoLower.includes("considerando espaços")) {
+            removerEspacos = false;
+        }
+        if (textoLower.includes("desconsiderando os espaços") || 
+            textoLower.includes("desconsiderando espaços")) {
+            removerEspacos = true;
+        }
+        
+        // ===== REGRA DAS VÍRGULAS =====
+        // Se tem "considerando a vírgula" ou "considerando vírgulas" -> MANTÉM vírgulas
+        // Se tem "desconsiderando" -> REMOVE vírgulas
+        let removerVirgulas = false;
+        
+        // Se pede para considerar (manter) vírgulas
+        if (textoLower.includes("considerando a vírgula") || 
+            textoLower.includes("considerando vírgula") ||
+            textoLower.includes("considerando as vírgulas")) {
+            removerVirgulas = false;
+        }
+        // Se pede para desconsiderar (remover) vírgulas
+        else if (textoLower.includes("desconsiderando a vírgula") || 
+                 textoLower.includes("desconsiderando vírgula") ||
+                 textoLower.includes("desconsiderando as vírgulas")) {
+            removerVirgulas = true;
+        }
+        // Se tem "vírgula" ou "vírgulas" junto com "espaços e"
+        else if ((textoLower.includes("vírgula") || textoLower.includes("vírgulas")) && 
+                 textoLower.includes("espaços e")) {
+            removerVirgulas = true;
+        }
+        
+        let fraseProcessada = frase;
+        let regraNome = "";
+        
+        // Espaços
+        if (removerEspacos) {
+            fraseProcessada = fraseProcessada.replace(/ /g, '');
+            regraNome += "🔹 Removeu espaços | ";
+        } else {
+            regraNome += "🔹 Manteve espaços | ";
+        }
+        
+        // Vírgulas
+        if (removerVirgulas) {
+            fraseProcessada = fraseProcessada.replace(/,/g, '');
+            regraNome += "🔸 Removeu vírgulas | ";
+        } else {
+            regraNome += "🔸 Manteve vírgulas | ";
+        }
+        
+        let total = fraseProcessada.length;
+        
+        return {
+            sucesso: true,
+            fraseOriginal: frase,
+            fraseProcessada: fraseProcessada,
+            total: total,
+            regra: regraNome.slice(0, -3)
+        };
+    }
+
+    function atualizarResposta() {
+        let pergunta = document.getElementById("campoPergunta").value;
+        if (!pergunta.trim()) {
+            document.getElementById("respostaNumero").innerText = "?";
+            document.getElementById("regraAuto").innerHTML = "";
+            document.getElementById("infoContagem").innerHTML = "🧾 Cole a pergunta... a resposta aparece sozinha.";
+            return;
+        }
+
+        let resultado = processarPergunta(pergunta);
+        
+        if (resultado.erro) {
+            document.getElementById("respostaNumero").innerText = "?";
+            document.getElementById("regraAuto").innerHTML = "⚠️ erro";
+            document.getElementById("infoContagem").innerHTML = resultado.erro;
+            return;
+        }
+
+        document.getElementById("respostaNumero").innerText = resultado.total;
+        document.getElementById("regraAuto").innerHTML = resultado.regra;
+        document.getElementById("infoContagem").innerHTML = `
+            📝 "${resultado.fraseOriginal}"<br>
+            🔍 Depois: "${resultado.fraseProcessada}"<br>
+            🧮 <strong>${resultado.total} caracteres</strong>
+        `;
+    }
+
+    // Eventos
+    let campoPergunta = document.getElementById("campoPergunta");
+    campoPergunta.addEventListener("paste", function() {
+        setTimeout(atualizarResposta, 50);
+    });
+    campoPergunta.addEventListener("input", atualizarResposta);
+    
+    atualizarResposta();
+</script>
+</body>
+</html>
