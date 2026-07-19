@@ -47,6 +47,13 @@
             padding: 4px 10px;
             border-radius: 50px;
         }
+        .badge-verde {
+            background: #27ae60;
+            color: white;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
         .campos-grid {
             display: flex;
             flex-direction: column;
@@ -138,6 +145,12 @@
             color: #1e6f5c;
             line-height: 1;
         }
+        .numero-grande-roxo {
+            font-size: 64px;
+            font-weight: 800;
+            color: #6c2e8a;
+            line-height: 1;
+        }
         .info-contagem {
             background: #edf2f7;
             padding: 10px;
@@ -154,6 +167,14 @@
             font-size: 13px;
             margin-top: 16px;
             border-left: 4px solid #f4a261;
+        }
+        .dica-especiais {
+            background: #f0e6f6;
+            padding: 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            margin-top: 16px;
+            border-left: 4px solid #6c2e8a;
         }
         hr {
             margin: 16px 0;
@@ -205,7 +226,7 @@
         </div>
     </div>
 
-    <!-- CARD 2: CONTADOR INTELIGENTE -->
+    <!-- CARD 2: CONTADOR INTELIGENTE (ESPAÇOS E VÍRGULAS) -->
     <div class="card">
         <div class="card-header">
             <h2>🔢 Contador Inteligente</h2>
@@ -217,7 +238,7 @@
             <textarea id="campoPergunta" rows="4" placeholder='Ex: Considerando os espaços e considerando a vírgula, quantos caracteres existem na frase: "Siga firme, confie em você e vá além hoje"? *'></textarea>
             
             <div class="resultado-instantaneo">
-                <div style="font-size: 13px; opacity: 0.7;">✅ RESPOSTA</div>
+                <div style="font-size: 13px; opacity: 0.7;">✅ RESPOSTA (Espaços e Vírgulas)</div>
                 <div class="numero-grande" id="respostaNumero">—</div>
                 <div id="regraAuto" style="font-size: 11px; background: #e6f4f0; display: inline-block; padding: 4px 12px; border-radius: 40px; margin-top: 6px;"></div>
                 <div class="info-contagem" id="infoContagem"></div>
@@ -225,12 +246,39 @@
         </div>
 
         <div class="dica">
-            ⚡ <strong>Agora reconhece QUALQUER variação:</strong><br>
+            ⚡ <strong>Reconhece:</strong><br>
             • "desconsiderando os espaços" → <strong>remove</strong> espaços<br>
             • "considerando os espaços" → <strong>mantém</strong> espaços<br>
             • "desconsiderando vírgulas" → <strong>remove</strong> vírgulas<br>
             • "considerando vírgulas" → <strong>mantém</strong> vírgulas<br>
-            🔥 <strong>Funciona para tudo!</strong>
+        </div>
+    </div>
+
+    <!-- CARD 3: REMOVER ESPAÇOS + CARACTERES ESPECIAIS (SEGUE AS REGRAS) -->
+    <div class="card">
+        <div class="card-header">
+            <h2>🔣 Remover Espaços + Especiais</h2>
+            <span class="badge-verde">NOVO</span>
+        </div>
+        
+        <div class="contador-area" style="background: #f0e6f6;">
+            <label>📌 Cole a pergunta completa aqui:</label>
+            <textarea id="campoEspacosEspeciais" rows="4" placeholder='Ex: Desconsiderando os espaços, quantas letras tem na frase "Traga sua energia e conecte-se ao próximo": *'></textarea>
+            
+            <div class="resultado-instantaneo">
+                <div style="font-size: 13px; opacity: 0.7;">🔣 RESULTADO (Sem espaços e sem especiais)</div>
+                <div class="numero-grande-roxo" id="respostaEspacosEspeciais">—</div>
+                <div id="regraEspacosEspeciais" style="font-size: 11px; background: #e6d5f0; display: inline-block; padding: 4px 12px; border-radius: 40px; margin-top: 6px;"></div>
+                <div class="info-contagem" id="infoEspacosEspeciais" style="background: #f5edf9;"></div>
+            </div>
+        </div>
+
+        <div class="dica-especiais">
+            🔣 <strong>Segue as mesmas regras do contador acima + remove especiais:</strong><br>
+            • Remove espaços conforme a regra<br>
+            • Remove vírgulas conforme a regra<br>
+            • Remove especiais: <code>_ / : ( ) - . * + @ &</code><br>
+            • 🔥 <strong>Único que resolve perguntas com hífen/traço</strong>
         </div>
     </div>
 </div>
@@ -266,7 +314,7 @@
         });
     });
 
-    // ==================== CONTADOR ATUALIZADO ====================
+    // ==================== CONTADOR 1: ESPAÇOS E VÍRGULAS ====================
     function extrairFrase(texto) {
         let match = texto.match(/"([^"]+)"/);
         if (match) {
@@ -283,10 +331,7 @@
 
         let textoLower = perguntaCompleta.toLowerCase();
         
-        // ===== REGRA DOS ESPAÇOS =====
-        // Se tem "considerando os espaços" -> MANTÉM espaços
-        // Se tem "desconsiderando os espaços" -> REMOVE espaços
-        // Padrão: remove espaços (mais comum)
+        // REGRA DOS ESPAÇOS
         let removerEspacos = true;
         
         if (textoLower.includes("considerando os espaços") || 
@@ -298,24 +343,19 @@
             removerEspacos = true;
         }
         
-        // ===== REGRA DAS VÍRGULAS =====
-        // Se tem "considerando a vírgula" ou "considerando vírgulas" -> MANTÉM vírgulas
-        // Se tem "desconsiderando" -> REMOVE vírgulas
+        // REGRA DAS VÍRGULAS
         let removerVirgulas = false;
         
-        // Se pede para considerar (manter) vírgulas
         if (textoLower.includes("considerando a vírgula") || 
             textoLower.includes("considerando vírgula") ||
             textoLower.includes("considerando as vírgulas")) {
             removerVirgulas = false;
         }
-        // Se pede para desconsiderar (remover) vírgulas
         else if (textoLower.includes("desconsiderando a vírgula") || 
                  textoLower.includes("desconsiderando vírgula") ||
                  textoLower.includes("desconsiderando as vírgulas")) {
             removerVirgulas = true;
         }
-        // Se tem "vírgula" ou "vírgulas" junto com "espaços e"
         else if ((textoLower.includes("vírgula") || textoLower.includes("vírgulas")) && 
                  textoLower.includes("espaços e")) {
             removerVirgulas = true;
@@ -378,7 +418,7 @@
         `;
     }
 
-    // Eventos
+    // Eventos do primeiro contador
     let campoPergunta = document.getElementById("campoPergunta");
     campoPergunta.addEventListener("paste", function() {
         setTimeout(atualizarResposta, 50);
@@ -386,6 +426,117 @@
     campoPergunta.addEventListener("input", atualizarResposta);
     
     atualizarResposta();
+
+    // ==================== CONTADOR 2: ESPAÇOS + VÍRGULAS + ESPECIAIS (SEGUE REGRAS) ====================
+    function processarEspacosEspeciais(perguntaCompleta) {
+        let frase = extrairFrase(perguntaCompleta);
+        if (!frase) {
+            return { erro: "Não encontrei a frase entre aspas." };
+        }
+
+        let textoLower = perguntaCompleta.toLowerCase();
+        
+        // ===== COPIA AS MESMAS REGRAS DO PRIMEIRO CONTADOR =====
+        // REGRA DOS ESPAÇOS
+        let removerEspacos = true;
+        
+        if (textoLower.includes("considerando os espaços") || 
+            textoLower.includes("considerando espaços")) {
+            removerEspacos = false;
+        }
+        if (textoLower.includes("desconsiderando os espaços") || 
+            textoLower.includes("desconsiderando espaços")) {
+            removerEspacos = true;
+        }
+        
+        // REGRA DAS VÍRGULAS
+        let removerVirgulas = false;
+        
+        if (textoLower.includes("considerando a vírgula") || 
+            textoLower.includes("considerando vírgula") ||
+            textoLower.includes("considerando as vírgulas")) {
+            removerVirgulas = false;
+        }
+        else if (textoLower.includes("desconsiderando a vírgula") || 
+                 textoLower.includes("desconsiderando vírgula") ||
+                 textoLower.includes("desconsiderando as vírgulas")) {
+            removerVirgulas = true;
+        }
+        else if ((textoLower.includes("vírgula") || textoLower.includes("vírgulas")) && 
+                 textoLower.includes("espaços e")) {
+            removerVirgulas = true;
+        }
+        
+        let fraseProcessada = frase;
+        let regraNome = "";
+        
+        // Espaços (mesma regra)
+        if (removerEspacos) {
+            fraseProcessada = fraseProcessada.replace(/ /g, '');
+            regraNome += "🔹 Removeu espaços | ";
+        } else {
+            regraNome += "🔹 Manteve espaços | ";
+        }
+        
+        // Vírgulas (mesma regra)
+        if (removerVirgulas) {
+            fraseProcessada = fraseProcessada.replace(/,/g, '');
+            regraNome += "🔸 Removeu vírgulas | ";
+        } else {
+            regraNome += "🔸 Manteve vírgulas | ";
+        }
+        
+        // ===== ADICIONAL: REMOVE CARACTERES ESPECIAIS =====
+        // Remove: _ / : ( ) - . * + @ &
+        fraseProcessada = fraseProcessada.replace(/[_\/:()\-.*+@&]/g, '');
+        regraNome += "🔣 Removeu especiais";
+        
+        let total = fraseProcessada.length;
+        
+        return {
+            sucesso: true,
+            fraseOriginal: frase,
+            fraseProcessada: fraseProcessada,
+            total: total,
+            regra: regraNome
+        };
+    }
+
+    function atualizarEspacosEspeciais() {
+        let pergunta = document.getElementById("campoEspacosEspeciais").value;
+        if (!pergunta.trim()) {
+            document.getElementById("respostaEspacosEspeciais").innerText = "?";
+            document.getElementById("regraEspacosEspeciais").innerHTML = "";
+            document.getElementById("infoEspacosEspeciais").innerHTML = "🔣 Cole a pergunta... a resposta aparece sozinha.";
+            return;
+        }
+
+        let resultado = processarEspacosEspeciais(pergunta);
+        
+        if (resultado.erro) {
+            document.getElementById("respostaEspacosEspeciais").innerText = "?";
+            document.getElementById("regraEspacosEspeciais").innerHTML = "⚠️ erro";
+            document.getElementById("infoEspacosEspeciais").innerHTML = resultado.erro;
+            return;
+        }
+
+        document.getElementById("respostaEspacosEspeciais").innerText = resultado.total;
+        document.getElementById("regraEspacosEspeciais").innerHTML = resultado.regra;
+        document.getElementById("infoEspacosEspeciais").innerHTML = `
+            📝 "${resultado.fraseOriginal}"<br>
+            🔍 Depois: "${resultado.fraseProcessada}"<br>
+            🧮 <strong>${resultado.total} caracteres</strong>
+        `;
+    }
+
+    // Eventos do segundo contador
+    let campoEspacosEspeciais = document.getElementById("campoEspacosEspeciais");
+    campoEspacosEspeciais.addEventListener("paste", function() {
+        setTimeout(atualizarEspacosEspeciais, 50);
+    });
+    campoEspacosEspeciais.addEventListener("input", atualizarEspacosEspeciais);
+    
+    atualizarEspacosEspeciais();
 </script>
 </body>
 </html>
